@@ -1,6 +1,11 @@
 #include "tm4c123gh6pm.h"
 #include "std_types.h"
 
+#define Max_Count 650
+#define Min_Count 100
+#define Max_Angle 180
+#define Min_Angle 0
+
 void delay(uint16 d)
 {
     while(d--);
@@ -57,12 +62,18 @@ PWM_INIT_PF1(void)
 }
 
 
+void Servo_Angle(uint8 Angle)
+{
+    uint16 Counts = (uint16)(((Angle-Min_Angle)*((float)((Max_Count-Min_Count)/(Max_Angle-Min_Angle))))+Min_Count)-1;
+    PWM1_2_CMPA_R = Counts;
+}
+
 int main(void)
 {
     PWM_INIT_PF1();
     while(1)
     {
-
+        Servo_Angle(90);
     }
 }
 
