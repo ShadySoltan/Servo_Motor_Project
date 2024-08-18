@@ -1,5 +1,6 @@
 #include "tm4c123gh6pm.h"
 #include "std_types.h"
+#include "UART.h"
 
 #define Max_Count 650
 #define Min_Count 100
@@ -62,7 +63,20 @@ PWM_INIT_PF1(void)
 }
 
 
-void Servo_Angle(uint8 Angle)
+uint8 convertArrayToUint8(uint8* array) {
+    int result = 0;
+    uint8 i = 0;
+
+    while(array[i] != '\0') {
+        result += array[i];
+        i++;
+    }
+
+    return result;
+}
+
+
+void Servo_Angle(int Angle)
 {
     uint16 Counts = (uint16)(((Angle-Min_Angle)*((float)((Max_Count-Min_Count)/(Max_Angle-Min_Angle))))+Min_Count)-1;
     PWM1_2_CMPA_R = Counts;
@@ -70,10 +84,16 @@ void Servo_Angle(uint8 Angle)
 
 int main(void)
 {
+    UART0_Init();
     PWM_INIT_PF1();
+
+    uint8 pData[20];
     while(1)
     {
-        Servo_Angle(90);
+        UART0_ReceiveString(pData);
+        UART0_SendString(pData);
+        int Angle = convertArrayToUint8(pData);
+        Servo_Angle(Angle);
     }
 }
 
