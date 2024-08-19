@@ -45,7 +45,7 @@ PWM_INIT_PF1(void)
     //Configure the load value to be 1600 meaning that the frequency will be 10KHz
     PWM1_2_LOAD_R = 4999;
     //Set the DutyCycle
-    PWM1_2_CMPA_R = 250;
+    PWM1_2_CMPA_R = 100;
 
     //When the PWM timer reach top it drives the PF1 to high
     PWM1_2_GENB_R &= ~(1<<3) | ~(1<<2);
@@ -68,7 +68,8 @@ uint8 convertArrayToUint8(uint8* array) {
     uint8 i = 0;
 
     while(array[i] != '\0') {
-        result += array[i];
+        result *= 10;
+        result += (array[i] - '0');
         i++;
     }
 
@@ -76,10 +77,9 @@ uint8 convertArrayToUint8(uint8* array) {
 }
 
 
-void Servo_Angle(int Angle)
-{
-    uint16 Counts = (uint16)(((Angle-Min_Angle)*((float)((Max_Count-Min_Count)/(Max_Angle-Min_Angle))))+Min_Count)-1;
-    PWM1_2_CMPA_R = Counts;
+void Servo_Angle(int Angle) {
+    uint16 Counts = (uint16)((Angle - Min_Angle) * (Max_Count - Min_Count) / (Max_Angle - Min_Angle) + Min_Count);
+    PWM1_2_CMPA_R = Counts - 1; // Adjust for 0-based index if necessary
 }
 
 int main(void)
