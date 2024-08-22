@@ -7,7 +7,7 @@
 #define Max_Angle 180
 #define Min_Angle 0
 
-void delay(uint16 d)
+void delay(uint32 d)
 {
     while(d--);
 }
@@ -18,6 +18,9 @@ PWM_INIT_PF1(void)
     while((SYSCTL_PRGPIO_R & 0x20) == 0); //PORTF Clock Enable
 
     SYSCTL_RCC_R |= (1<<20); //Use PredividedClock
+
+    SYSCTL_RCC_R &= ~(0x000E0000); // Clear pre-divider field
+    SYSCTL_RCC_R |= (0x05 << 17);  // Set the pre-divider to 64
 
     SYSCTL_RCGCPWM_R |= (1<<1); //Module1 Clock Enable
 
@@ -45,7 +48,7 @@ PWM_INIT_PF1(void)
     //Configure the load value to be 1600 meaning that the frequency will be 10KHz
     PWM1_2_LOAD_R = 4999;
     //Set the DutyCycle
-    PWM1_2_CMPA_R = 100;
+    PWM1_2_CMPA_R = 500;
 
     //When the PWM timer reach top it drives the PF1 to high
     PWM1_2_GENB_R &= ~(1<<3) | ~(1<<2);
@@ -86,13 +89,12 @@ int main(void)
 {
     UART0_Init();
     PWM_INIT_PF1();
-
-    uint8 pData[20];
+    uint8 str[20];
     while(1)
     {
-        UART0_ReceiveString(pData);
-        UART0_SendString(pData);
-        int Angle = convertArrayToUint8(pData);
+        UART0_ReceiveString(str);
+        UART0_SendString(str);
+        uint8 Angle = convertArrayToUint8(str);
         Servo_Angle(Angle);
     }
 }
