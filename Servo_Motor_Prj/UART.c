@@ -115,7 +115,7 @@ extern void UART0_ReceiveString(uint8 *pData)
 
     pData[uCounter] = UART0_ReceiveByte();
 
-    while(pData[uCounter] != '.')
+    while(pData[uCounter] != '\r')
     {
         uCounter++;
         pData[uCounter] = UART0_ReceiveByte();
