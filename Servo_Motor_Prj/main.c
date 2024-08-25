@@ -1,6 +1,7 @@
 #include "tm4c123gh6pm.h"
 #include "std_types.h"
 #include "UART.h"
+#include "UART5.h"
 
 #define Max_Count 650
 #define Min_Count 100
@@ -66,9 +67,9 @@ PWM_INIT_PF1(void)
 }
 
 
-uint8 convertArrayToUint8(uint8* array) {
-    int result = 0;
-    uint8 i = 0;
+unsigned int convertArrayToInt(uint8* array) {
+    unsigned int result = 0;
+    int i = 0;
 
     while(array[i] != '\0') {
         result *= 10;
@@ -81,20 +82,49 @@ uint8 convertArrayToUint8(uint8* array) {
 
 
 void Servo_Angle(int Angle) {
-    uint16 Counts = (uint16)((Angle - Min_Angle) * (Max_Count - Min_Count) / (Max_Angle - Min_Angle) + Min_Count);
+    uint16 Counts = (uint16)((float)((Angle - (int)Min_Angle) * ((int)Max_Count - (int)Min_Count) / ((int)Max_Angle - (int)Min_Angle) + (int)Min_Count));
     PWM1_2_CMPA_R = Counts - 1; // Adjust for 0-based index if necessary
+}
+
+void UART5FlushReceiver(void) {
+    // Check if the receiver FIFO is empty
+    while ((UART5_FR_R & UART_FR_RXFE) == 0) {
+        // Read and discard data from the FIFO to clear it
+        (void)UART5_DR_R;
+    }
+}
+
+// Function to flush the UART5 transmitter FIFO
+void UART5FlushTransmitter(void) {
+    // Wait until the transmitter FIFO is empty
+    while ((UART5_FR_R & UART_FR_TXFE) == 0)
+    {
+        delay(1000);
+    }
+
 }
 
 int main(void)
 {
-    UART0_Init();
+    HC05_Init();
     PWM_INIT_PF1();
     uint8 str[20];
     while(1)
     {
-        UART0_ReceiveString(str);
-        UART0_SendString(str);
-        uint8 Angle = convertArrayToUint8(str);
+        UART5FlushTransmitter();
+        UART5FlushReceiver();
+
+        uint32 uCounter = 0;
+
+        // Clear the string buffer by setting each element to '\0'
+        for (uCounter = 0; uCounter < 20; uCounter++) {
+            str[uCounter] = '\0';
+        }
+
+
+        UART5_ReceiveString(str);
+        UART5_SendString(str);
+        unsigned int Angle = convertArrayToInt(str);
         Servo_Angle(Angle);
     }
 }

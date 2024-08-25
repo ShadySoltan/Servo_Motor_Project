@@ -1,4 +1,5 @@
 "./UART.obj"
+"./UART5.obj"
 "./main.obj"
 "./tm4c123gh6pm_startup_ccs.obj"
 "../tm4c123gh6pm.cmd"

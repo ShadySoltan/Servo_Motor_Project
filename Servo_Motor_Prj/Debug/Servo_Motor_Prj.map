@@ -1,17 +1,17 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.7                     
 ******************************************************************************
->> Linked Sun Aug 25 06:02:29 2024
+>> Linked Sun Aug 25 09:41:09 2024
 
 OUTPUT FILE NAME:   <Servo_Motor_Prj.out>
-ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 000005f1
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 000005a5
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00040000  00000630  0003f9d0  R  X
+  FLASH                 00000000   00040000  000005e4  0003fa1c  R  X
   SRAM                  20000000   00008000  00000200  00007e00  RW X
 
 
@@ -19,9 +19,9 @@ SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00000630   00000630    r-x
+00000000    00000000    000005e4   000005e4    r-x
   00000000    00000000    0000026c   0000026c    r-- .intvecs
-  0000026c    0000026c    000003c4   000003c4    r-x .text
+  0000026c    0000026c    00000378   00000378    r-x .text
 20000000    20000000    00000200   00000000    rw-
   20000000    20000000    00000200   00000000    rw- .stack
 
@@ -34,13 +34,13 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    0000026c     
                   00000000    0000026c     tm4c123gh6pm_startup_ccs.obj (.intvecs)
 
-.text      0    0000026c    000003c4     
-                  0000026c    000001cc     UART.obj (.text)
-                  00000438    000001b8     main.obj (.text)
-                  000005f0    0000002c     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noinit_noargs:_c_int00_noinit_noargs)
-                  0000061c    0000000c     tm4c123gh6pm_startup_ccs.obj (.text)
-                  00000628    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
-                  0000062c    00000004                                   : exit.c.obj (.text:abort:abort)
+.text      0    0000026c    00000378     
+                  0000026c    00000210     main.obj (.text)
+                  0000047c    00000128     UART5.obj (.text)
+                  000005a4    0000002c     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noinit_noargs:_c_int00_noinit_noargs)
+                  000005d0    0000000c     tm4c123gh6pm_startup_ccs.obj (.text)
+                  000005dc    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  000005e0    00000004                                   : exit.c.obj (.text:abort:abort)
 
 .cinit     0    00000000    00000000     UNINITIALIZED
 
@@ -60,10 +60,10 @@ MODULE SUMMARY
        ------                         ----   -------   -------
     .\
        tm4c123gh6pm_startup_ccs.obj   12     620       0      
-       UART.obj                       460    0         0      
-       main.obj                       440    0         0      
+       main.obj                       528    0         0      
+       UART5.obj                      296    0         0      
     +--+------------------------------+------+---------+---------+
-       Total:                         912    620       0      
+       Total:                         836    620       0      
                                                               
     C:\ti\ccs1260\ccs\tools\compiler\ti-cgt-arm_20.2.7.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
        boot_cortex_m.c.obj            44     0         0      
@@ -74,24 +74,24 @@ MODULE SUMMARY
                                                               
        Stack:                         0      0         512    
     +--+------------------------------+------+---------+---------+
-       Grand Total:                   964    620       512    
+       Grand Total:                   888    620       512    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
 
 address   name                   
 -------   ----                   
-0000062d  C$$EXIT                
-00000455  PWM_INIT_PF1           
-0000061d  ResetISR               
-00000565  Servo_Angle            
-000002e1  UART0_Init             
-0000033d  UART0_ReceiveByte      
-00000375  UART0_ReceiveData      
-000003c5  UART0_ReceiveString    
-00000321  UART0_SendByte         
-0000034d  UART0_SendData         
-0000039f  UART0_SendString       
+000005e1  C$$EXIT                
+0000047d  HC05_Init              
+00000289  PWM_INIT_PF1           
+000005d1  ResetISR               
+0000038d  Servo_Angle            
+000003c5  UART5FlushReceiver     
+000003d5  UART5FlushTransmitter  
+000004ff  UART5_ReceiveByte      
+0000050f  UART5_ReceiveString    
+000004e3  UART5_SendByte         
+00000547  UART5_SendString       
 20000200  __STACK_END            
 00000200  __STACK_SIZE           
 20000200  __STACK_TOP            
@@ -105,14 +105,14 @@ UNDEFED   __mpu_init
 20000000  __stack                
 20000000  __start___llvm_prf_cnts
 20000000  __stop___llvm_prf_cnts 
-000005f1  _c_int00_noinit_noargs 
-00000629  _system_pre_init       
-0000062d  abort                  
+000005a5  _c_int00_noinit_noargs 
+000005dd  _system_pre_init       
+000005e1  abort                  
 ffffffff  binit                  
-0000051b  convertArrayToUint8    
-00000439  delay                  
+0000034f  convertArrayToInt      
+0000026d  delay                  
 00000000  g_pfnVectors           
-0000058d  main                   
+000003eb  main                   
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -122,23 +122,23 @@ address   name
 00000000  __TI_static_base__     
 00000000  g_pfnVectors           
 00000200  __STACK_SIZE           
-000002e1  UART0_Init             
-00000321  UART0_SendByte         
-0000033d  UART0_ReceiveByte      
-0000034d  UART0_SendData         
-00000375  UART0_ReceiveData      
-0000039f  UART0_SendString       
-000003c5  UART0_ReceiveString    
-00000439  delay                  
-00000455  PWM_INIT_PF1           
-0000051b  convertArrayToUint8    
-00000565  Servo_Angle            
-0000058d  main                   
-000005f1  _c_int00_noinit_noargs 
-0000061d  ResetISR               
-00000629  _system_pre_init       
-0000062d  C$$EXIT                
-0000062d  abort                  
+0000026d  delay                  
+00000289  PWM_INIT_PF1           
+0000034f  convertArrayToInt      
+0000038d  Servo_Angle            
+000003c5  UART5FlushReceiver     
+000003d5  UART5FlushTransmitter  
+000003eb  main                   
+0000047d  HC05_Init              
+000004e3  UART5_SendByte         
+000004ff  UART5_ReceiveByte      
+0000050f  UART5_ReceiveString    
+00000547  UART5_SendString       
+000005a5  _c_int00_noinit_noargs 
+000005d1  ResetISR               
+000005dd  _system_pre_init       
+000005e1  C$$EXIT                
+000005e1  abort                  
 20000000  __stack                
 20000000  __start___llvm_prf_cnts
 20000000  __stop___llvm_prf_cnts 
