@@ -45,6 +45,7 @@ uint8 UART5_ReceiveByte(void)
 
 void UART5_ReceiveString(uint8 *pData)
 {
+    UART5FlushReceiver();
     uint32 uCounter = 0;
 
     pData[uCounter] = UART5_ReceiveByte();
@@ -59,6 +60,7 @@ void UART5_ReceiveString(uint8 *pData)
 
 void UART5_SendString(const uint8 *pData)
 {
+    UART5FlushTransmitter();
     uint32 uCounter = 0;
 
     while(pData[uCounter] != '\0')
@@ -66,5 +68,19 @@ void UART5_SendString(const uint8 *pData)
         UART5_SendByte(pData[uCounter]);
         uCounter++;
     }
+}
+
+void UART5FlushReceiver(void) {
+    // Check if the receiver FIFO is empty
+    while ((UART5_FR_R & UART_FR_RXFE) == 0) {
+        // Read and discard data from the FIFO to clear it
+        (void)UART5_DR_R;
+    }
+}
+
+// Function to flush the UART5 transmitter FIFO
+void UART5FlushTransmitter(void) {
+    // Wait until the transmitter FIFO is empty
+    while ((UART5_FR_R & UART_FR_TXFE) == 0);
 }
 

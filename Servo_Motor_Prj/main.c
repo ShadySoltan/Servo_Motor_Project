@@ -86,23 +86,7 @@ void Servo_Angle(int Angle) {
     PWM1_2_CMPA_R = Counts - 1; // Adjust for 0-based index if necessary
 }
 
-void UART5FlushReceiver(void) {
-    // Check if the receiver FIFO is empty
-    while ((UART5_FR_R & UART_FR_RXFE) == 0) {
-        // Read and discard data from the FIFO to clear it
-        (void)UART5_DR_R;
-    }
-}
 
-// Function to flush the UART5 transmitter FIFO
-void UART5FlushTransmitter(void) {
-    // Wait until the transmitter FIFO is empty
-    while ((UART5_FR_R & UART_FR_TXFE) == 0)
-    {
-        delay(1000);
-    }
-
-}
 
 int main(void)
 {
@@ -111,19 +95,9 @@ int main(void)
     uint8 str[20];
     while(1)
     {
-        UART5FlushTransmitter();
-        UART5FlushReceiver();
-
-        uint32 uCounter = 0;
-
-        // Clear the string buffer by setting each element to '\0'
-        for (uCounter = 0; uCounter < 20; uCounter++) {
-            str[uCounter] = '\0';
-        }
-
-
         UART5_ReceiveString(str);
         UART5_SendString(str);
+        delay(5000);
         unsigned int Angle = convertArrayToInt(str);
         Servo_Angle(Angle);
     }

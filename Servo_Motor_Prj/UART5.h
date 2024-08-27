@@ -30,6 +30,7 @@ void UART5_SendByte(uint8 data);
 uint8 UART5_ReceiveByte(void);
 void UART5_ReceiveString(uint8 *pData);
 void UART5_SendString(const uint8 *pData);
-
+void UART5FlushReceiver(void);
+void UART5FlushTransmitter(void);
 
 #endif /* UART5_H_ */
